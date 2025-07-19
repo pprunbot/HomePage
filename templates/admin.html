@@ -1,51 +1,326 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <title>后台管理</title>
-    <style>
-        body { font-family: Arial; margin: 30px; }
-        textarea { width: 100%; height: 150px; }
-        button { margin-top: 10px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>后台管理</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    .section {
+      background: #1e1e2e;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #3e3e5e;
+      background: #2a2a3c;
+      color: #fff;
+    }
+    
+    button {
+      background: #5865F2;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    
+    button:hover {
+      background: #4752c4;
+    }
+    
+    .list-container {
+      margin-top: 20px;
+    }
+    
+    .item-card {
+      background: #2a2a3c;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .item-info h3 {
+      margin: 0 0 5px 0;
+    }
+    
+    .item-info p {
+      margin: 0;
+      color: #a9b1d6;
+    }
+    
+    .password-section {
+      max-width: 500px;
+      margin: 0 auto;
+    }
+  </style>
 </head>
 <body>
-    <h2>站点展示管理</h2>
-    <textarea id="sites"></textarea>
+  <div class="admin-container">
+    <h1>个人主页后台管理</h1>
+    
+    <div class="section">
+      <h2><i class="fas fa-globe"></i> 站点管理</h2>
+      <form id="site-form">
+        <div class="form-group">
+          <label for="site-title">站点标题</label>
+          <input type="text" id="site-title" required>
+        </div>
+        <div class="form-group">
+          <label for="site-url">站点URL</label>
+          <input type="url" id="site-url" required>
+        </div>
+        <div class="form-group">
+          <label for="site-icon">图标URL</label>
+          <input type="url" id="site-icon" required>
+        </div>
+        <div class="form-group">
+          <label for="site-description">描述</label>
+          <input type="text" id="site-description" required>
+        </div>
+        <button type="submit">添加站点</button>
+      </form>
+      
+      <div class="list-container" id="sites-list">
+        <!-- 站点列表将在这里动态生成 -->
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2><i class="fas fa-cube"></i> 项目管理</h2>
+      <form id="project-form">
+        <div class="form-group">
+          <label for="project-title">项目标题</label>
+          <input type="text" id="project-title" required>
+        </div>
+        <div class="form-group">
+          <label for="project-url">项目URL</label>
+          <input type="url" id="project-url" required>
+        </div>
+        <div class="form-group">
+          <label for="project-icon">图标URL</label>
+          <input type="url" id="project-icon" required>
+        </div>
+        <div class="form-group">
+          <label for="project-description">描述</label>
+          <input type="text" id="project-description" required>
+        </div>
+        <button type="submit">添加项目</button>
+      </form>
+      
+      <div class="list-container" id="projects-list">
+        <!-- 项目列表将在这里动态生成 -->
+      </div>
+    </div>
+    
+    <div class="section password-section">
+      <h2><i class="fas fa-lock"></i> 密码设置</h2>
+      <form id="password-form">
+        <div class="form-group">
+          <label for="new-password">新密码</label>
+          <input type="password" id="new-password" required>
+        </div>
+        <div class="form-group">
+          <label for="confirm-password">确认密码</label>
+          <input type="password" id="confirm-password" required>
+        </div>
+        <button type="submit">设置密码</button>
+      </form>
+    </div>
+  </div>
 
-    <h2>项目展示管理</h2>
-    <textarea id="projects"></textarea>
-
-    <h2>后台密码设置</h2>
-    <input type="text" id="newPassword" placeholder="输入新密码（留空不修改）"><br>
-
-    <button onclick="save()">保存修改</button>
-
-    <script>
-        function fetchData() {
-            fetch('/api/data').then(res => res.json()).then(data => {
-                document.getElementById('sites').value = JSON.stringify(data.sites, null, 2);
-                document.getElementById('projects').value = JSON.stringify(data.projects, null, 2);
-            });
+  <script>
+    // 获取DOM元素
+    const siteForm = document.getElementById('site-form');
+    const projectForm = document.getElementById('project-form');
+    const passwordForm = document.getElementById('password-form');
+    const sitesList = document.getElementById('sites-list');
+    const projectsList = document.getElementById('projects-list');
+    
+    // 加载数据
+    async function loadData() {
+      try {
+        const response = await fetch('/admin/data');
+        const data = await response.json();
+        
+        // 渲染站点列表
+        sitesList.innerHTML = '';
+        data.sites.forEach((site, index) => {
+          sitesList.innerHTML += `
+            <div class="item-card">
+              <div class="item-info">
+                <h3>${site.title}</h3>
+                <p>${site.description}</p>
+              </div>
+              <button onclick="deleteSite(${index})">删除</button>
+            </div>
+          `;
+        });
+        
+        // 渲染项目列表
+        projectsList.innerHTML = '';
+        data.projects.forEach((project, index) => {
+          projectsList.innerHTML += `
+            <div class="item-card">
+              <div class="item-info">
+                <h3>${project.title}</h3>
+                <p>${project.description}</p>
+              </div>
+              <button onclick="deleteProject(${index})">删除</button>
+            </div>
+          `;
+        });
+        
+      } catch (error) {
+        console.error('加载数据失败:', error);
+      }
+    }
+    
+    // 添加站点
+    siteForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const newSite = {
+        title: document.getElementById('site-title').value,
+        url: document.getElementById('site-url').value,
+        icon: document.getElementById('site-icon').value,
+        description: document.getElementById('site-description').value
+      };
+      
+      try {
+        const response = await fetch('/admin/sites', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newSite)
+        });
+        
+        if (response.ok) {
+          siteForm.reset();
+          loadData();
         }
-
-        function save() {
-            const sites = document.getElementById('sites').value;
-            const projects = document.getElementById('projects').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const formData = new URLSearchParams();
-            formData.append('sites', sites);
-            formData.append('projects', projects);
-            formData.append('newPassword', newPassword);
-
-            fetch('/api/update', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: formData
-            }).then(() => alert('保存成功！'));
+      } catch (error) {
+        console.error('添加站点失败:', error);
+      }
+    });
+    
+    // 添加项目
+    projectForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const newProject = {
+        title: document.getElementById('project-title').value,
+        url: document.getElementById('project-url').value,
+        icon: document.getElementById('project-icon').value,
+        description: document.getElementById('project-description').value
+      };
+      
+      try {
+        const response = await fetch('/admin/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newProject)
+        });
+        
+        if (response.ok) {
+          projectForm.reset();
+          loadData();
         }
-
-        fetchData();
-    </script>
+      } catch (error) {
+        console.error('添加项目失败:', error);
+      }
+    });
+    
+    // 设置密码
+    passwordForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      
+      if (newPassword !== confirmPassword) {
+        alert('两次输入的密码不一致');
+        return;
+      }
+      
+      try {
+        const response = await fetch('/admin/password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: newPassword })
+        });
+        
+        if (response.ok) {
+          alert('密码设置成功！');
+          passwordForm.reset();
+        }
+      } catch (error) {
+        console.error('设置密码失败:', error);
+      }
+    });
+    
+    // 删除站点
+    window.deleteSite = async (index) => {
+      if (confirm('确定要删除这个站点吗？')) {
+        try {
+          const response = await fetch(`/admin/sites/${index}`, {
+            method: 'DELETE'
+          });
+          
+          if (response.ok) {
+            loadData();
+          }
+        } catch (error) {
+          console.error('删除站点失败:', error);
+        }
+      }
+    };
+    
+    // 删除项目
+    window.deleteProject = async (index) => {
+      if (confirm('确定要删除这个项目吗？')) {
+        try {
+          const response = await fetch(`/admin/projects/${index}`, {
+            method: 'DELETE'
+          });
+          
+          if (response.ok) {
+            loadData();
+          }
+        } catch (error) {
+          console.error('删除项目失败:', error);
+        }
+      }
+    };
+    
+    // 页面加载时获取数据
+    document.addEventListener('DOMContentLoaded', loadData);
+  </script>
 </body>
 </html>
