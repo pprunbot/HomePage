@@ -1,100 +1,67 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>登录后台</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <style>
-    .login-container {
-      max-width: 400px;
-      margin: 100px auto;
-      padding: 30px;
-      background: #1e1e2e;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 5px;
-      border: 1px solid #3e3e5e;
-      background: #2a2a3c;
-      color: #fff;
-      box-sizing: border-box;
-    }
-    
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #5865F2;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.3s;
-    }
-    
-    button:hover {
-      background: #4752c4;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录后台</title>
+    <link rel="stylesheet" href="/static/admin-style.css">
+    <link rel="stylesheet" href="/static/fontawesome.css">
 </head>
 <body>
-  <div class="login-container">
-    <h1>后台登录</h1>
-    <form id="login-form">
-      <div class="form-group">
-        <label for="password">密码</label>
-        <input type="password" id="password" required>
-      </div>
-      <button type="submit">登录</button>
-    </form>
-  </div>
-
-  <script>
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const password = document.getElementById('password').value;
-      
-      try {
-        const response = await fetch('/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: `password=${encodeURIComponent(password)}`
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <i class="fas fa-lock"></i>
+                <h2>后台管理系统登录</h2>
+            </div>
+            
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="password"><i class="fas fa-key"></i> 密码</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt"></i> 登录
+                </button>
+                
+                <div id="login-message" class="message"></div>
+            </form>
+            
+            <div class="login-footer">
+                <p>© 2025 个人主页管理系统</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const message = document.getElementById('login-message');
+            
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ password })
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/admin';
+                } else {
+                    message.textContent = '登录失败，密码错误';
+                    message.style.color = '#e74c3c';
+                }
+            } catch (error) {
+                message.textContent = '登录请求失败';
+                message.style.color = '#e74c3c';
+                console.error('登录错误:', error);
+            }
         });
-        
-        if (response.redirected) {
-          window.location.href = response.url;
-        } else {
-          const result = await response.text();
-          alert(result);
-        }
-      } catch (error) {
-        console.error('登录失败:', error);
-        alert('登录失败，请重试');
-      }
-    });
-  </script>
+    </script>
 </body>
 </html>
