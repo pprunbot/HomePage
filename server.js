@@ -5,184 +5,126 @@ const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
 
+const DATA_PATH = path.join(__dirname, 'data', 'config.json');
+const TEMPLATES = path.join(__dirname, 'templates');
+const STATIC = path.join(__dirname, 'static');
+
 const app = express();
 const PORT = 3000;
 
-// 创建必要目录
-if (!fs.existsSync('data')) fs.mkdirSync('data');
-
-// 初始化配置文件
-const configPath = path.join(__dirname, 'data', 'config.json');
-if (!fs.existsSync(configPath)) {
-  fs.writeFileSync(configPath, JSON.stringify({ passwordSet: false, passwordHash: '' }));
-}
-
-// 初始化站点数据
-const sitesPath = path.join(__dirname, 'data', 'sites.json');
-if (!fs.existsSync(sitesPath)) {
-  fs.writeFileSync(sitesPath, JSON.stringify([
-    {
-      "name": "博客",
-      "description": "记录技术日常",
-      "url": "https://blog.loadke.tech/",
-      "icon": "https://img.icons8.com/?id=87160&format=png"
-    },
-    {
-      "name": "轻API",
-      "description": "一些API接口",
-      "url": "https://api.loadke.tech",
-      "icon": "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
-    }
-  ]));
-}
-
-// 初始化项目数据
-const projectsPath = path.join(__dirname, 'data', 'projects.json');
-if (!fs.existsSync(projectsPath)) {
-  fs.writeFileSync(projectsPath, JSON.stringify([
-    {
-      "name": "IonRh主页",
-      "description": "Github介绍页",
-      "url": "https://github.com/IonRh",
-      "icon": "https://img.icons8.com/fluency/48/github.png"
-    },
-    {
-      "name": "本站开源主页",
-      "description": "本站的开源仓库",
-      "url": "https://github.com/IonRh/HomePage",
-      "icon": "https://img.icons8.com/fluency/48/github.png"
-    }
-  ]));
-}
-
 // 中间件
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 app.use(session({
-  secret: 'secret-key',
+  secret: 'your-secret-key', // 请替换为随机字符串
   resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // 生产环境应设为true
+  saveUninitialized: true
 }));
+app.use('/static', express.static(STATIC));
 
-// 静态文件服务
-app.use('/static', express.static(path.join(__dirname, 'static')));
-app.use('/data', express.static(path.join(__dirname, 'data')));
-
-// 检查密码是否设置
-function isPasswordSet() {
-  const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-  return config.passwordSet;
+// 确保 config 文件存在
+if (!fs.existsSync(DATA_PATH)) {
+  fs.mkdirSync(path.dirname(DATA_PATH), { recursive: true });
+  fs.writeFileSync(DATA_PATH, JSON.stringify({
+    passwordHash: null,
+    sites: [],
+    projects: []
+  }, null, 2));
 }
 
-// 验证密码
-function validatePassword(password) {
-  const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-  return bcrypt.compareSync(password, config.passwordHash);
+// 读取 / 保存
+function loadConfig() {
+  return JSON.parse(fs.readFileSync(DATA_PATH, 'utf8'));
+}
+function saveConfig(cfg) {
+  fs.writeFileSync(DATA_PATH, JSON.stringify(cfg, null, 2));
 }
 
-// 设置密码
-function setPassword(password) {
-  const salt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(password, salt);
-  const config = { passwordSet: true, passwordHash: hash };
-  fs.writeFileSync(configPath, JSON.stringify(config));
+// 登录检查
+function requireAuth(req, res, next) {
+  if (req.session && req.session.authed) return next();
+  res.redirect('/login');
 }
 
-// 路由：首页
+// 渲染 index.html（保持不变）
 app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'templates', 'index.html'));
+  res.sendFile(path.join(TEMPLATES, 'index.html'));
 });
 
-// 路由：登录页面
+// 登录页
 app.get('/login', (req, res) => {
-  if (!isPasswordSet()) {
-    return res.redirect('/admin');
-  }
-  res.sendFile(path.resolve(__dirname, 'templates', 'login.html'));
+  res.sendFile(path.join(__dirname, 'views', 'login.html'));
 });
-
-// 路由：处理登录
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const { password } = req.body;
+  const cfg = loadConfig();
 
-  if (!isPasswordSet()) {
-    req.session.isAdmin = true;
+  // 如果第一次（未设置过密码），则设定它
+  if (!cfg.passwordHash) {
+    const hash = await bcrypt.hash(password, 10);
+    cfg.passwordHash = hash;
+    saveConfig(cfg);
+    req.session.authed = true;
     return res.redirect('/admin');
   }
 
-  if (validatePassword(password)) {
-    req.session.isAdmin = true;
+  // 已设置过，校验
+  const ok = await bcrypt.compare(password, cfg.passwordHash);
+  if (ok) {
+    req.session.authed = true;
     res.redirect('/admin');
   } else {
-    res.status(401).send('密码错误');
+    res.send('密码错误，请 <a href="/login">重试</a>');
   }
 });
 
-// 路由：登出
+// 退出
 app.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.redirect('/login');
+  req.session.destroy(() => res.redirect('/login'));
 });
 
-// 路由：管理后台
-app.get('/admin', (req, res) => {
-  if (!isPasswordSet()) {
-    req.session.isAdmin = true;
-    return res.sendFile(path.resolve(__dirname, 'templates', 'admin.html'));
+// 后台管理主界面
+app.get('/admin', requireAuth, (req, res) => {
+  const cfg = loadConfig();
+  res.render('admin.html', {
+    sites: cfg.sites,
+    projects: cfg.projects
+  });
+});
+
+// 增删改站点 / 项目
+app.post('/admin/action', requireAuth, (req, res) => {
+  const { type, action, index, name, url, desc } = req.body;
+  // type = 'site'|'project'
+  const cfg = loadConfig();
+  const list = (type === 'site') ? cfg.sites : cfg.projects;
+
+  if (action === 'add') {
+    list.push({ name, url, desc });
   }
-
-  if (req.session.isAdmin) {
-    res.sendFile(path.resolve(__dirname, 'templates', 'admin.html'));
-  } else {
-    res.redirect('/login');
+  else if (action === 'delete') {
+    list.splice(Number(index), 1);
   }
+  else if (action === 'edit') {
+    Object.assign(list[Number(index)], { name, url, desc });
+  }
+  saveConfig(cfg);
+  res.redirect('/admin');
 });
 
-// 路由：设置密码
-app.post('/admin/set-password', (req, res) => {
-  if (!req.session.isAdmin) return res.status(403).send('无权限');
-
-  const { password } = req.body;
-  setPassword(password);
-  res.send('密码设置成功');
+// 设置/修改后台密码
+app.post('/admin/password', requireAuth, async (req, res) => {
+  const { newPassword } = req.body;
+  const cfg = loadConfig();
+  cfg.passwordHash = await bcrypt.hash(newPassword, 10);
+  saveConfig(cfg);
+  res.redirect('/admin');
 });
 
-// 路由：获取站点数据
-app.get('/admin/sites', (req, res) => {
-  if (!req.session.isAdmin) return res.status(403).send('无权限');
+// 启用 EJS 语法渲染 HTML
+app.engine('html', require('ejs').renderFile);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'html');
 
-  const sites = JSON.parse(fs.readFileSync(sitesPath, 'utf8'));
-  res.json(sites);
-});
-
-// 路由：更新站点数据
-app.post('/admin/sites', (req, res) => {
-  if (!req.session.isAdmin) return res.status(403).send('无权限');
-
-  const sites = req.body;
-  fs.writeFileSync(sitesPath, JSON.stringify(sites, null, 2));
-  res.send('站点数据更新成功');
-});
-
-// 路由：获取项目数据
-app.get('/admin/projects', (req, res) => {
-  if (!req.session.isAdmin) return res.status(403).send('无权限');
-
-  const projects = JSON.parse(fs.readFileSync(projectsPath, 'utf8'));
-  res.json(projects);
-});
-
-// 路由：更新项目数据
-app.post('/admin/projects', (req, res) => {
-  if (!req.session.isAdmin) return res.status(403).send('无权限');
-
-  const projects = req.body;
-  fs.writeFileSync(projectsPath, JSON.stringify(projects, null, 2));
-  res.send('项目数据更新成功');
-});
-
-// 启动服务器
 app.listen(PORT, () => {
-  console.log(`服务器运行在 http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
