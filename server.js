@@ -1,157 +1,119 @@
 const express = require('express');
-const session = require('express-session');
-const bodyParser = require('body-parser');
 const fs = require('fs');
-const path = require('path');
-
+const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-// 创建配置文件（如果不存在）
-const configPath = path.join(__dirname, 'config.json');
-if (!fs.existsSync(configPath)) {
-    fs.writeFileSync(configPath, JSON.stringify({
-        passwordSet: false,
-        password: ''
-    }, null, 2));
-}
+const DATA_FILE = './data.json';
+const PASSWORD_FILE = './password.json';
+const INDEX_FILE = './templates/index.html';
 
-// 创建内容文件（如果不存在）
-const contentPath = path.join(__dirname, 'content.json');
-if (!fs.existsSync(contentPath)) {
-    fs.writeFileSync(contentPath, JSON.stringify({
-        sites: '',
-        projects: ''
-    }, null, 2));
-}
-
-// 中间件
+app.use(express.static('static'));
+app.use('/templates', express.static('templates'));
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(session({
-    secret: 'your-secret-key',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false }
-}));
 
-// 静态文件服务
-app.use('/static', express.static(path.join(__dirname, 'static')));
+// 初始化数据文件
+if (!fs.existsSync(DATA_FILE)) {
+    fs.writeFileSync(DATA_FILE, JSON.stringify({ sites: [], projects: [] }, null, 2));
+}
+if (!fs.existsSync(PASSWORD_FILE)) {
+    fs.writeFileSync(PASSWORD_FILE, JSON.stringify({ password: null }, null, 2));
+}
 
-// 鉴权中间件
-const checkAuth = (req, res, next) => {
-    const config = JSON.parse(fs.readFileSync(configPath));
-    
-    if (!config.passwordSet) {
-        // 尚未设置密码，允许访问
-        return next();
-    }
-    
-    if (req.session && req.session.authenticated) {
-        // 已登录
-        return next();
-    }
-    
-    // 未登录，重定向到登录页
-    res.redirect('/login');
-};
-
-// 首页路由
+// 渲染首页
 app.get('/', (req, res) => {
-    const indexPath = path.join(__dirname, 'templates', 'index.html');
-    const content = JSON.parse(fs.readFileSync(contentPath));
-    
-    fs.readFile(indexPath, 'utf8', (err, data) => {
-        if (err) {
-            return res.status(500).send('Error loading page');
-        }
-        
-        // 替换占位内容
-        const updatedData = data
-            .replace('<!-- 站点展示 -->', content.sites)
-            .replace('<!-- 项目展示 -->', content.projects);
-        
-        res.send(updatedData);
-    });
+    res.sendFile(INDEX_FILE);
 });
 
-// 登录页面
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'templates', 'login.html'));
-});
-
-// 登录处理
-app.post('/login', (req, res) => {
-    const config = JSON.parse(fs.readFileSync(configPath));
-    const { password } = req.body;
-    
-    if (config.passwordSet && password === config.password) {
-        req.session.authenticated = true;
-        res.redirect('/admin');
-    } else if (!config.passwordSet) {
-        // 首次访问，无需密码
-        req.session.authenticated = true;
-        res.redirect('/admin');
+// 后台登录页面
+app.get('/admin', (req, res) => {
+    const { password } = JSON.parse(fs.readFileSync(PASSWORD_FILE));
+    if (password) {
+        res.sendFile(__dirname + '/templates/login.html');
     } else {
-        res.send('密码错误');
+        res.sendFile(__dirname + '/templates/admin.html');
     }
 });
 
-// 后台管理页面
-app.get('/admin', checkAuth, (req, res) => {
-    res.sendFile(path.join(__dirname, 'templates', 'admin.html'));
-});
-
-// 获取当前内容
-app.get('/api/content', checkAuth, (req, res) => {
-    try {
-        const content = JSON.parse(fs.readFileSync(contentPath));
-        res.json(content);
-    } catch (error) {
-        res.status(500).json({ error: '无法读取内容' });
+// 登录提交
+app.post('/login', (req, res) => {
+    const { password } = req.body;
+    const saved = JSON.parse(fs.readFileSync(PASSWORD_FILE)).password;
+    if (saved && password === saved) {
+        res.sendFile(__dirname + '/templates/admin.html');
+    } else {
+        res.send('<script>alert("密码错误！");window.location="/admin";</script>');
     }
 });
 
-// 更新内容
-app.post('/api/update-content', checkAuth, (req, res) => {
-    try {
-        const { sites, projects } = req.body;
-        const newContent = { sites, projects };
-        
-        fs.writeFileSync(contentPath, JSON.stringify(newContent, null, 2));
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: '更新失败' });
-    }
+// 获取当前数据
+app.get('/api/data', (req, res) => {
+    const data = JSON.parse(fs.readFileSync(DATA_FILE));
+    res.json(data);
 });
 
-// 设置密码
-app.post('/api/set-password', checkAuth, (req, res) => {
-    try {
-        const { password } = req.body;
-        const config = JSON.parse(fs.readFileSync(configPath));
-        
-        config.passwordSet = true;
-        config.password = password;
-        
-        fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: '设置密码失败' });
+// 更新数据
+app.post('/api/update', (req, res) => {
+    const { sites, projects, newPassword } = req.body;
+
+    if (sites && projects) {
+        const data = { sites: JSON.parse(sites), projects: JSON.parse(projects) };
+        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+        updateIndexHtml(data);
     }
+
+    if (newPassword) {
+        fs.writeFileSync(PASSWORD_FILE, JSON.stringify({ password: newPassword }, null, 2));
+    }
+
+    res.send('OK');
 });
 
-// 检查密码设置状态
-app.get('/api/password-status', (req, res) => {
-    try {
-        const config = JSON.parse(fs.readFileSync(configPath));
-        res.json({ passwordSet: config.passwordSet });
-    } catch (error) {
-        res.status(500).json({ error: '无法读取配置' });
-    }
-});
+// 更新index.html文件
+function updateIndexHtml(data) {
+    let html = fs.readFileSync(INDEX_FILE, 'utf8');
 
-// 启动服务器
+    const sitesHtml = data.sites.map(site => `
+        <a href="${site.url}" target="_blank" class="site-link btn-effect">
+            <div class="site-card">
+                <div class="site-icon">
+                    <img src="${site.img}" alt="${site.title}">
+                </div>
+                <div class="site-info">
+                    <h3>${site.title}</h3>
+                    <p>${site.desc}</p>
+                </div>
+            </div>
+        </a>
+    `).join('');
+
+    const projectsHtml = data.projects.map(proj => `
+        <a href="${proj.url}" target="_blank" class="project-link btn-effect">
+            <div class="project-card">
+                <div class="project-icon">
+                    <img src="${proj.img}" alt="${proj.title}">
+                </div>
+                <div class="project-info">
+                    <h3>${proj.title}</h3>
+                    <p>${proj.desc}</p>
+                </div>
+            </div>
+        </a>
+    `).join('');
+
+    html = html.replace(
+        /<!-- 站点展示 -->[\s\S]*?<section class="projects-section">/,
+        `<!-- 站点展示 -->\n<section class="sites-section">\n<h2><i class="fas fa-globe"></i> WebSite</h2>\n<div class="sites-grid">${sitesHtml}</div>\n</section>\n\n<section class="projects-section">`
+    );
+
+    html = html.replace(
+        /<!-- 项目展示 -->[\s\S]*?<section class="skills-section">/,
+        `<!-- 项目展示 -->\n<section class="projects-section">\n<h2><i class="fas fa-cube"></i> 项目集</h2>\n<div class="projects-grid">${projectsHtml}</div>\n</section>\n\n<section class="skills-section">`
+    );
+
+    fs.writeFileSync(INDEX_FILE, html);
+}
+
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`后台运行在 http://localhost:${port}/admin`);
 });
