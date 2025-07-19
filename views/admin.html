@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>后台管理</title>
+  <style>
+    body { font-family:sans-serif; padding:2em; }
+    h2 { margin-top:1em; }
+    table { width:100%; border-collapse: collapse; margin-top:0.5em; }
+    th, td { border:1px solid #ddd; padding:0.5em; }
+    form.inline { display:inline; }
+    .logout { position: absolute; top:1em; right:1em; }
+  </style>
+</head>
+<body>
+  <a href="/logout" class="logout">退出</a>
+  <h1>后台管理</h1>
+
+  <!-- 站点管理 -->
+  <section>
+    <h2>站点展示</h2>
+    <table>
+      <tr><th>名称</th><th>链接</th><th>描述</th><th>操作</th></tr>
+      <% sites.forEach(function(s, i){ %>
+      <tr>
+        <td><%= s.name %></td>
+        <td><%= s.url %></td>
+        <td><%= s.desc %></td>
+        <td>
+          <form class="inline" method="post" action="/admin/action">
+            <input type="hidden" name="type" value="site">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="index" value="<%= i %>">
+            <button type="submit">删除</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </table>
+    <form method="post" action="/admin/action">
+      <input type="hidden" name="type" value="site">
+      <input type="hidden" name="action" value="add">
+      <h3>添加站点</h3>
+      <input name="name" placeholder="名称" required>
+      <input name="url" placeholder="链接" required>
+      <input name="desc" placeholder="描述" required>
+      <button type="submit">添加</button>
+    </form>
+  </section>
+
+  <!-- 项目管理 -->
+  <section>
+    <h2>项目展示</h2>
+    <table>
+      <tr><th>名称</th><th>链接</th><th>描述</th><th>操作</th></tr>
+      <% projects.forEach(function(p, i){ %>
+      <tr>
+        <td><%= p.name %></td>
+        <td><%= p.url %></td>
+        <td><%= p.desc %></td>
+        <td>
+          <form class="inline" method="post" action="/admin/action">
+            <input type="hidden" name="type" value="project">
+            <input type="hidden" name="action" value="delete">
+            <input type="hidden" name="index" value="<%= i %>">
+            <button type="submit">删除</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </table>
+    <form method="post" action="/admin/action">
+      <input type="hidden" name="type" value="project">
+      <input type="hidden" name="action" value="add">
+      <h3>添加项目</h3>
+      <input name="name" placeholder="名称" required>
+      <input name="url" placeholder="链接" required>
+      <input name="desc" placeholder="描述" required>
+      <button type="submit">添加</button>
+    </form>
+  </section>
+
+  <!-- 修改后台密码 -->
+  <section>
+    <h2>修改后台密码</h2>
+    <form method="post" action="/admin/password">
+      <input type="password" name="newPassword" placeholder="新密码" required>
+      <button type="submit">更新密码</button>
+    </form>
+  </section>
+</body>
+</html>
