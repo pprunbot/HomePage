@@ -99,7 +99,7 @@ function renderDefaultSites() {
     if (!container) return;
     
     container.innerHTML = `
-        <a href="https://blog.loadke.tech/" target="_blank" class="site-link btn-effect">
+        <a href="http://localhost:3000/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
                     <img src="https://img.icons8.com/?id=87160&format=png" alt="博客">
@@ -110,47 +110,47 @@ function renderDefaultSites() {
                 </div>
             </div>
         </a>
-        <a href="https://api.loadke.tech" target="_blank" class="site-link btn-effect">
+        <a href="http://localhost:3000/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
                     <img src="https://img.icons8.com/?id=Oz14KBnT7lnn&format=png" alt="API站">
                 </div>
                 <div class="site-info">
                     <h3>轻API</h3>
-                    <p>一些API接口</p>
+                    <p>API-test</p>
                 </div>
             </div>
         </a>
-        <a href="https://bestip.badking.pp.ua/" target="_blank" class="site-link btn-effect">
+        <a href="http://localhost:3000/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?id=13682&format=png" alt="优选IP站">
+                    <img src="https://img.icons8.com/?id=13682&format=png" alt="Cloudflare-test">
                 </div>
                 <div class="site-info">
-                    <h3>优选IP面板</h3>
-                    <p>Cloudflare优选IP</p>
+                    <h3>Cloudflare-test</h3>
+                    <p>Cloudflare-test</p>
                 </div>
             </div>
         </a>
-        <a href="https://webproxy.badking.pp.ua/" target="_blank" class="site-link btn-effect">
+        <a href="http://localhost:3000/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?id=115369&format=png" alt="加速Github-Jsdlier-Docker">
+                    <img src="https://img.icons8.com/?id=115369&format=png" alt="Github-Jsdlier-Docker">
                 </div>
                 <div class="site-info">
-                    <h3>加速访问</h3>
-                    <p>GH Jsdlier Docker</p>
+                    <h3>test</h3>
+                    <p>test</p>
                 </div>
             </div>
         </a>
-        <a href="https://translate.badking.pp.ua/" target="_blank" class="site-link btn-effect">
+        <a href="http://localhost:3000/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?id=h57OOadmEz64&format=png" alt="加速Github-Jsdlier-Docker">
+                    <img src="https://img.icons8.com/?id=h57OOadmEz64&format=png" alt="Google 翻译">
                 </div>
                 <div class="site-info">
                     <h3>Google 翻译</h3>
-                    <p>Google 翻译加速</p>
+                    <p>Google 翻译</p>
                 </div>
             </div>
         </a>
@@ -162,21 +162,21 @@ function renderDefaultProjects() {
     if (!container) return;
     
     container.innerHTML = `
-        <a href="https://github.com/IonRh" target="_blank" class="project-link btn-effect">
+        <a href="https://github.com/pprunbot/" target="_blank" class="project-link btn-effect">
             <div class="project-card">
                 <div class="project-icon">
-                    <img src="https://img.icons8.com/fluency/48/github.png" alt="IonRh主页">
+                    <img src="https://img.icons8.com/fluency/48/github.png" alt=""pprunbot主页">
                 </div>
                 <div class="project-info">
-                    <h3>IonRh主页</h3>
+                    <h3>"pprunbot主页</h3>
                     <p>Github介绍页</p>
                 </div>
             </div>
         </a>
-        <a href="https://github.com/IonRh/HomePage" target="_blank" class="project-link btn-effect">
+        <a href="https://github.com/pprunbot/HomePage/" target="_blank" class="project-link btn-effect">
             <div class="project-card">
                 <div class="project-icon">
-                    <img src="https://img.icons8.com/fluency/48/github.png" alt="IonRh主题">
+                    <img src="https://img.icons8.com/fluency/48/github.png" alt="pprunbot主题">
                 </div>
                 <div class="project-info">
                     <h3>本站开源主页</h3>
@@ -184,14 +184,14 @@ function renderDefaultProjects() {
                 </div>
             </div>
         </a>
-        <a href="https://github.com/IonRh/Cloudflare-BestIP" target="_blank" class="project-link btn-effect">
+        <a href="https://github.com/pprunbot/IOS_Shared" target="_blank" class="project-link btn-effect">
             <div class="project-card">
                 <div class="project-icon">
-                    <img src="https://img.icons8.com/fluency/48/github.png" alt="优选IP站">
+                    <img src="https://img.icons8.com/fluency/48/github.png" alt="Shadowrocket账号共享">
                 </div>
                 <div class="project-info">
-                    <h3>CF BestIP</h3>
-                    <p>Cloudflare优选IP</p>
+                    <h3>Shadowrocket账号共享</h3>
+                    <p>Shadowrocket共享</p>
                 </div>
             </div>
         </a>
