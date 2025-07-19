@@ -7,6 +7,39 @@
     <link rel="stylesheet" href="./static/style.css">
     <link rel="shortcut icon" href="https://pppttt-tu.hf.space/i/2025/07/11/6871232d88b72.png">
     <link rel="stylesheet" href="./static/fontawesome.css">
+    <style>
+        /* 右下角齿轮图标样式 */
+        .admin-gear {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #4a00e0, #8e2de2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        .admin-gear:hover {
+            transform: rotate(30deg) scale(1.1);
+            box-shadow: 0 8px 25px rgba(106, 17, 203, 0.6);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
 </head>
 <body>
     <div class="main-container">
@@ -138,21 +171,8 @@
                 </article>
             </section>
             
-            <!-- 站点展示 - 改为动态加载 -->
-            <section class="sites-section">
-                <h2><i class="fas fa-globe"></i> WebSite</h2>
-                <div class="sites-grid" id="sites-container">
-                    <!-- 站点数据将通过JS动态加载 -->
-                </div>
-            </section>
-            
-            <!-- 项目展示 - 改为动态加载 -->
-            <section class="projects-section">
-                <h2><i class="fas fa-cube"></i> 项目集</h2>
-                <div class="projects-grid" id="projects-container">
-                    <!-- 项目数据将通过JS动态加载 -->
-                </div>
-            </section>
+            <!-- 动态类别展示区域 -->
+            <div id="categories-container"></div>
             
             <!-- 技能展示 -->
             <section class="skills-section">
@@ -183,12 +203,17 @@
         </main>
     </div>
     <footer>
-            <p>© 2025 WebSite by <a href="https://github.com/pprunbot/HomePage/" target="_blank">leo(pprunbot)</a></p>
+        <p>© 2025 WebSite by <a href="https://github.com/pprunbot/HomePage/" target="_blank">leo(pprunbot)</a></p>
     </footer>
+    
+    <!-- 右下角齿轮图标 -->
+    <div class="admin-gear" title="后台管理" onclick="window.location.href='/login'">
+        <i class="fas fa-cog"></i>
+    </div>
+    
+    <script src="./static/script.js"></script>
+    <script src="./static/dynamic-content.js"></script>
+    <script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
+    <script>LA.init({id:"KqfNGExcbQ1y1BH7",ck:"KqfNGExcbQ1y1BH7",autoTrack:true})</script>
 </body>
-<script src="./static/script.js"></script>
-<!-- 添加动态加载内容的脚本 -->
-<script src="./static/dynamic-content.js?v=1"></script>
-<script charset="UTF-8" id="LA_COLLECT" src="//sdk.51.la/js-sdk-pro.min.js"></script>
-<script>LA.init({id:"KqfNGExcbQ1y1BH7",ck:"KqfNGExcbQ1y1BH7",autoTrack:true})</script>
 </html>
