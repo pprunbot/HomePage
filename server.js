@@ -22,15 +22,15 @@ const sitesPath = path.join(__dirname, 'data', 'sites.json');
 if (!fs.existsSync(sitesPath)) {
   fs.writeFileSync(sitesPath, JSON.stringify([
     {
-      "name": "博客", 
-      "description": "记录技术日常", 
-      "url": "https://blog.loadke.tech/", 
+      "name": "博客",
+      "description": "记录技术日常",
+      "url": "https://blog.loadke.tech/",
       "icon": "https://img.icons8.com/?id=87160&format=png"
     },
     {
-      "name": "轻API", 
-      "description": "一些API接口", 
-      "url": "https://api.loadke.tech", 
+      "name": "轻API",
+      "description": "一些API接口",
+      "url": "https://api.loadke.tech",
       "icon": "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
     }
   ]));
@@ -41,15 +41,15 @@ const projectsPath = path.join(__dirname, 'data', 'projects.json');
 if (!fs.existsSync(projectsPath)) {
   fs.writeFileSync(projectsPath, JSON.stringify([
     {
-      "name": "IonRh主页", 
-      "description": "Github介绍页", 
-      "url": "https://github.com/IonRh", 
+      "name": "IonRh主页",
+      "description": "Github介绍页",
+      "url": "https://github.com/IonRh",
       "icon": "https://img.icons8.com/fluency/48/github.png"
     },
     {
-      "name": "本站开源主页", 
-      "description": "本站的开源仓库", 
-      "url": "https://github.com/IonRh/HomePage", 
+      "name": "本站开源主页",
+      "description": "本站的开源仓库",
+      "url": "https://github.com/IonRh/HomePage",
       "icon": "https://img.icons8.com/fluency/48/github.png"
     }
   ]));
@@ -91,7 +91,7 @@ function setPassword(password) {
 
 // 路由：首页
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates', 'index.html'));
+  res.sendFile(path.resolve(__dirname, 'templates', 'index.html'));
 });
 
 // 路由：登录页面
@@ -99,18 +99,18 @@ app.get('/login', (req, res) => {
   if (!isPasswordSet()) {
     return res.redirect('/admin');
   }
-  res.sendFile(path.join(__dirname, 'templates', 'login.html'));
+  res.sendFile(path.resolve(__dirname, 'templates', 'login.html'));
 });
 
 // 路由：处理登录
 app.post('/login', (req, res) => {
   const { password } = req.body;
-  
+
   if (!isPasswordSet()) {
     req.session.isAdmin = true;
     return res.redirect('/admin');
   }
-  
+
   if (validatePassword(password)) {
     req.session.isAdmin = true;
     res.redirect('/admin');
@@ -129,11 +129,11 @@ app.get('/logout', (req, res) => {
 app.get('/admin', (req, res) => {
   if (!isPasswordSet()) {
     req.session.isAdmin = true;
-    return res.sendFile(path.join(__dirname, 'templates', 'admin.html'));
+    return res.sendFile(path.resolve(__dirname, 'templates', 'admin.html'));
   }
-  
+
   if (req.session.isAdmin) {
-    res.sendFile(path.join(__dirname, 'templates', 'admin.html'));
+    res.sendFile(path.resolve(__dirname, 'templates', 'admin.html'));
   } else {
     res.redirect('/login');
   }
@@ -142,7 +142,7 @@ app.get('/admin', (req, res) => {
 // 路由：设置密码
 app.post('/admin/set-password', (req, res) => {
   if (!req.session.isAdmin) return res.status(403).send('无权限');
-  
+
   const { password } = req.body;
   setPassword(password);
   res.send('密码设置成功');
@@ -151,7 +151,7 @@ app.post('/admin/set-password', (req, res) => {
 // 路由：获取站点数据
 app.get('/admin/sites', (req, res) => {
   if (!req.session.isAdmin) return res.status(403).send('无权限');
-  
+
   const sites = JSON.parse(fs.readFileSync(sitesPath, 'utf8'));
   res.json(sites);
 });
@@ -159,7 +159,7 @@ app.get('/admin/sites', (req, res) => {
 // 路由：更新站点数据
 app.post('/admin/sites', (req, res) => {
   if (!req.session.isAdmin) return res.status(403).send('无权限');
-  
+
   const sites = req.body;
   fs.writeFileSync(sitesPath, JSON.stringify(sites, null, 2));
   res.send('站点数据更新成功');
@@ -168,7 +168,7 @@ app.post('/admin/sites', (req, res) => {
 // 路由：获取项目数据
 app.get('/admin/projects', (req, res) => {
   if (!req.session.isAdmin) return res.status(403).send('无权限');
-  
+
   const projects = JSON.parse(fs.readFileSync(projectsPath, 'utf8'));
   res.json(projects);
 });
@@ -176,7 +176,7 @@ app.get('/admin/projects', (req, res) => {
 // 路由：更新项目数据
 app.post('/admin/projects', (req, res) => {
   if (!req.session.isAdmin) return res.status(403).send('无权限');
-  
+
   const projects = req.body;
   fs.writeFileSync(projectsPath, JSON.stringify(projects, null, 2));
   res.send('项目数据更新成功');
