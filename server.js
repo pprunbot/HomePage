@@ -3,195 +3,183 @@ const session = require('express-session');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 
 const app = express();
 const PORT = 3000;
 
-// 确保数据目录存在
-const dataDir = path.join(__dirname, 'data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir);
+// 创建必要目录
+if (!fs.existsSync('data')) fs.mkdirSync('data');
+
+// 初始化配置文件
+const configPath = path.join(__dirname, 'data', 'config.json');
+if (!fs.existsSync(configPath)) {
+  fs.writeFileSync(configPath, JSON.stringify({ passwordSet: false, passwordHash: '' }));
 }
 
-// 初始化数据文件
-const initDataFile = (file, defaultValue) => {
-  if (!fs.existsSync(file)) {
-    fs.writeFileSync(file, JSON.stringify(defaultValue, null, 2));
-  }
-};
+// 初始化站点数据
+const sitesPath = path.join(__dirname, 'data', 'sites.json');
+if (!fs.existsSync(sitesPath)) {
+  fs.writeFileSync(sitesPath, JSON.stringify([
+    {
+      "name": "博客", 
+      "description": "记录技术日常", 
+      "url": "https://blog.loadke.tech/", 
+      "icon": "https://img.icons8.com/?id=87160&format=png"
+    },
+    {
+      "name": "轻API", 
+      "description": "一些API接口", 
+      "url": "https://api.loadke.tech", 
+      "icon": "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
+    }
+  ]));
+}
 
-// 初始化数据文件
-initDataFile(path.join(dataDir, 'sites.json'), []);
-initDataFile(path.join(dataDir, 'projects.json'), []);
-initDataFile(path.join(dataDir, 'password.json'), { password: '' });
+// 初始化项目数据
+const projectsPath = path.join(__dirname, 'data', 'projects.json');
+if (!fs.existsSync(projectsPath)) {
+  fs.writeFileSync(projectsPath, JSON.stringify([
+    {
+      "name": "IonRh主页", 
+      "description": "Github介绍页", 
+      "url": "https://github.com/IonRh", 
+      "icon": "https://img.icons8.com/fluency/48/github.png"
+    },
+    {
+      "name": "本站开源主页", 
+      "description": "本站的开源仓库", 
+      "url": "https://github.com/IonRh/HomePage", 
+      "icon": "https://img.icons8.com/fluency/48/github.png"
+    }
+  ]));
+}
 
 // 中间件
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({
-  secret: 'secret_key',
+  secret: 'secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }
+  cookie: { secure: false } // 生产环境应设为true
 }));
-app.use(express.static(path.join(__dirname, 'static')));
 
-// 读取数据文件
-const readData = (file) => {
-  return JSON.parse(fs.readFileSync(file, 'utf8'));
-};
+// 静态文件服务
+app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use('/data', express.static(path.join(__dirname, 'data')));
 
-// 写入数据文件
-const writeData = (file, data) => {
-  fs.writeFileSync(file, JSON.stringify(data, null, 2));
-};
+// 检查密码是否设置
+function isPasswordSet() {
+  const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  return config.passwordSet;
+}
 
-// 检查密码
-const checkPassword = (req, res, next) => {
-  const passwordData = readData(path.join(dataDir, 'password.json'));
-  
-  // 如果未设置密码，直接允许访问
-  if (!passwordData.password) {
-    return next();
-  }
-  
-  // 检查会话是否已认证
-  if (req.session.authenticated) {
-    return next();
-  }
-  
-  res.redirect('/login');
-};
+// 验证密码
+function validatePassword(password) {
+  const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+  return bcrypt.compareSync(password, config.passwordHash);
+}
 
-// 主页路由
+// 设置密码
+function setPassword(password) {
+  const salt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync(password, salt);
+  const config = { passwordSet: true, passwordHash: hash };
+  fs.writeFileSync(configPath, JSON.stringify(config));
+}
+
+// 路由：首页
 app.get('/', (req, res) => {
-  const sites = readData(path.join(dataDir, 'sites.json'));
-  const projects = readData(path.join(dataDir, 'projects.json'));
-  
-  let html = fs.readFileSync(path.join(__dirname, 'templates', 'index.html'), 'utf8');
-  
-  // 动态插入站点数据
-  const sitesHtml = sites.map(site => `
-    <a href="${site.url}" target="_blank" class="site-link btn-effect">
-      <div class="site-card">
-        <div class="site-icon">
-          <img src="${site.icon}" alt="${site.title}">
-        </div>
-        <div class="site-info">
-          <h3>${site.title}</h3>
-          <p>${site.description}</p>
-        </div>
-      </div>
-    </a>
-  `).join('');
-  
-  // 动态插入项目数据
-  const projectsHtml = projects.map(project => `
-    <a href="${project.url}" target="_blank" class="project-link btn-effect">
-      <div class="project-card">
-        <div class="project-icon">
-          <img src="${project.icon}" alt="${project.title}">
-        </div>
-        <div class="project-info">
-          <h3>${project.title}</h3>
-          <p>${project.description}</p>
-        </div>
-      </div>
-    </a>
-  `).join('');
-  
-  // 替换占位符
-  html = html.replace('<!-- 站点展示 -->', sitesHtml);
-  html = html.replace('<!-- 项目展示 -->', projectsHtml);
-  
-  res.send(html);
+  res.sendFile(path.join(__dirname, 'templates', 'index.html'));
 });
 
-// 登录页面
+// 路由：登录页面
 app.get('/login', (req, res) => {
+  if (!isPasswordSet()) {
+    return res.redirect('/admin');
+  }
   res.sendFile(path.join(__dirname, 'templates', 'login.html'));
 });
 
-// 登录处理
+// 路由：处理登录
 app.post('/login', (req, res) => {
   const { password } = req.body;
-  const passwordData = readData(path.join(dataDir, 'password.json'));
   
-  if (password === passwordData.password) {
-    req.session.authenticated = true;
+  if (!isPasswordSet()) {
+    req.session.isAdmin = true;
+    return res.redirect('/admin');
+  }
+  
+  if (validatePassword(password)) {
+    req.session.isAdmin = true;
     res.redirect('/admin');
   } else {
-    res.send('密码错误');
+    res.status(401).send('密码错误');
   }
 });
 
-// 后台管理页面
-app.get('/admin', checkPassword, (req, res) => {
-  res.sendFile(path.join(__dirname, 'templates', 'admin.html'));
+// 路由：登出
+app.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.redirect('/login');
 });
 
-// 获取数据API
-app.get('/admin/data', checkPassword, (req, res) => {
-  const sites = readData(path.join(dataDir, 'sites.json'));
-  const projects = readData(path.join(dataDir, 'projects.json'));
-  const passwordData = readData(path.join(dataDir, 'password.json'));
+// 路由：管理后台
+app.get('/admin', (req, res) => {
+  if (!isPasswordSet()) {
+    req.session.isAdmin = true;
+    return res.sendFile(path.join(__dirname, 'templates', 'admin.html'));
+  }
   
-  res.json({
-    sites,
-    projects,
-    hasPassword: !!passwordData.password
-  });
-});
-
-// 添加站点
-app.post('/admin/sites', checkPassword, (req, res) => {
-  const sites = readData(path.join(dataDir, 'sites.json'));
-  sites.push(req.body);
-  writeData(path.join(dataDir, 'sites.json'), sites);
-  res.json({ success: true });
-});
-
-// 删除站点
-app.delete('/admin/sites/:index', checkPassword, (req, res) => {
-  const sites = readData(path.join(dataDir, 'sites.json'));
-  const index = parseInt(req.params.index);
-  
-  if (index >= 0 && index < sites.length) {
-    sites.splice(index, 1);
-    writeData(path.join(dataDir, 'sites.json'), sites);
-    res.json({ success: true });
+  if (req.session.isAdmin) {
+    res.sendFile(path.join(__dirname, 'templates', 'admin.html'));
   } else {
-    res.status(400).json({ error: '无效的索引' });
+    res.redirect('/login');
   }
 });
 
-// 添加项目
-app.post('/admin/projects', checkPassword, (req, res) => {
-  const projects = readData(path.join(dataDir, 'projects.json'));
-  projects.push(req.body);
-  writeData(path.join(dataDir, 'projects.json'), projects);
-  res.json({ success: true });
-});
-
-// 删除项目
-app.delete('/admin/projects/:index', checkPassword, (req, res) => {
-  const projects = readData(path.join(dataDir, 'projects.json'));
-  const index = parseInt(req.params.index);
+// 路由：设置密码
+app.post('/admin/set-password', (req, res) => {
+  if (!req.session.isAdmin) return res.status(403).send('无权限');
   
-  if (index >= 0 && index < projects.length) {
-    projects.splice(index, 1);
-    writeData(path.join(dataDir, 'projects.json'), projects);
-    res.json({ success: true });
-  } else {
-    res.status(400).json({ error: '无效的索引' });
-  }
-});
-
-// 设置密码
-app.post('/admin/password', checkPassword, (req, res) => {
   const { password } = req.body;
-  writeData(path.join(dataDir, 'password.json'), { password });
-  res.json({ success: true });
+  setPassword(password);
+  res.send('密码设置成功');
+});
+
+// 路由：获取站点数据
+app.get('/admin/sites', (req, res) => {
+  if (!req.session.isAdmin) return res.status(403).send('无权限');
+  
+  const sites = JSON.parse(fs.readFileSync(sitesPath, 'utf8'));
+  res.json(sites);
+});
+
+// 路由：更新站点数据
+app.post('/admin/sites', (req, res) => {
+  if (!req.session.isAdmin) return res.status(403).send('无权限');
+  
+  const sites = req.body;
+  fs.writeFileSync(sitesPath, JSON.stringify(sites, null, 2));
+  res.send('站点数据更新成功');
+});
+
+// 路由：获取项目数据
+app.get('/admin/projects', (req, res) => {
+  if (!req.session.isAdmin) return res.status(403).send('无权限');
+  
+  const projects = JSON.parse(fs.readFileSync(projectsPath, 'utf8'));
+  res.json(projects);
+});
+
+// 路由：更新项目数据
+app.post('/admin/projects', (req, res) => {
+  if (!req.session.isAdmin) return res.status(403).send('无权限');
+  
+  const projects = req.body;
+  fs.writeFileSync(projectsPath, JSON.stringify(projects, null, 2));
+  res.send('项目数据更新成功');
 });
 
 // 启动服务器
