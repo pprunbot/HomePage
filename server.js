@@ -24,31 +24,31 @@ if (!fs.existsSync(sitesPath)) {
     {
       "name": "博客", 
       "description": "记录技术日常", 
-      "url": "https://blog.loadke.tech/", 
+      "url": "http://localhost:3000/", 
       "icon": "https://img.icons8.com/?id=87160&format=png"
     },
     {
       "name": "轻API", 
-      "description": "一些API接口", 
-      "url": "https://api.loadke.tech", 
+      "description": "API-test", 
+      "url": "http://localhost:3000", 
       "icon": "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
     },
     {
-      "name": "优选IP面板", 
-      "description": "Cloudflare优选IP", 
-      "url": "https://bestip.badking.pp.ua/", 
+      "name": "Cloudflare-test", 
+      "description": "Cloudflare-test", 
+      "url": "http://localhost:3000/", 
       "icon": "https://img.icons8.com/?id=13682&format=png"
     },
     {
-      "name": "加速访问", 
+      "name": "test", 
       "description": "GH Jsdlier Docker", 
-      "url": "https://webproxy.badking.pp.ua/", 
+      "url": "http://localhost:3000/", 
       "icon": "https://img.icons8.com/?id=115369&format=png"
     },
     {
-      "name": "Google 翻译", 
-      "description": "Google 翻译加速", 
-      "url": "https://translate.badking.pp.ua/", 
+      "name": "Google", 
+      "description": "Google 翻译", 
+      "url": "http://localhost:3000/", 
       "icon": "https://img.icons8.com/?id=h57OOadmEz64&format=png"
     }
   ]));
@@ -59,21 +59,21 @@ const projectsPath = path.join(__dirname, 'data', 'projects.json');
 if (!fs.existsSync(projectsPath)) {
   fs.writeFileSync(projectsPath, JSON.stringify([
     {
-      "name": "IonRh主页", 
+      "name": "pprunbot主页", 
       "description": "Github介绍页", 
-      "url": "https://github.com/IonRh", 
+      "url": "https://github.com/pprunbot/", 
       "icon": "https://img.icons8.com/fluency/48/github.png"
     },
     {
       "name": "本站开源主页", 
       "description": "本站的开源仓库", 
-      "url": "https://github.com/IonRh/HomePage", 
+      "url": "https://github.com/pprunbot/HomePage/", 
       "icon": "https://img.icons8.com/fluency/48/github.png"
     },
     {
-      "name": "CF BestIP", 
-      "description": "Cloudflare优选IP", 
-      "url": "https://github.com/IonRh/Cloudflare-BestIP", 
+      "name": "Shadowrocket账号共享", 
+      "description": "Shadowrocket vue前端页", 
+      "url": "https://github.com/pprunbot/IOS_Shared", 
       "icon": "https://img.icons8.com/fluency/48/github.png"
     },
     {
