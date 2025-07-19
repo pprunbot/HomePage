@@ -17,70 +17,27 @@ if (!fs.existsSync(configPath)) {
   fs.writeFileSync(configPath, JSON.stringify({ passwordSet: false, passwordHash: '' }));
 }
 
-// 初始化站点数据
-const sitesPath = path.join(__dirname, 'data', 'sites.json');
-if (!fs.existsSync(sitesPath)) {
-  fs.writeFileSync(sitesPath, JSON.stringify([
+// 初始化类别数据
+const categoriesPath = path.join(__dirname, 'data', 'categories.json');
+if (!fs.existsSync(categoriesPath)) {
+  fs.writeFileSync(categoriesPath, JSON.stringify([
     {
-      "name": "博客", 
-      "description": "记录技术日常", 
-      "url": "https://blog.loadke.tech/", 
-      "icon": "https://img.icons8.com/?id=87160&format=png"
+      id: 'sites',
+      name: '站点展示',
+      icon: 'fas fa-globe',
+      items: [
+        { name: "博客", description: "记录技术日常", url: "https://blog.loadke.tech/", icon: "https://img.icons8.com/?id=87160&format=png" },
+        { name: "轻API", description: "一些API接口", url: "https://api.loadke.tech", icon: "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png" }
+      ]
     },
     {
-      "name": "轻API", 
-      "description": "一些API接口", 
-      "url": "https://api.loadke.tech", 
-      "icon": "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
-    },
-    {
-      "name": "优选IP面板", 
-      "description": "Cloudflare优选IP", 
-      "url": "https://bestip.badking.pp.ua/", 
-      "icon": "https://img.icons8.com/?id=13682&format=png"
-    },
-    {
-      "name": "加速访问", 
-      "description": "GH Jsdlier Docker", 
-      "url": "https://webproxy.badking.pp.ua/", 
-      "icon": "https://img.icons8.com/?id=115369&format=png"
-    },
-    {
-      "name": "Google 翻译", 
-      "description": "Google 翻译加速", 
-      "url": "https://translate.badking.pp.ua/", 
-      "icon": "https://img.icons8.com/?id=h57OOadmEz64&format=png"
-    }
-  ]));
-}
-
-// 初始化项目数据
-const projectsPath = path.join(__dirname, 'data', 'projects.json');
-if (!fs.existsSync(projectsPath)) {
-  fs.writeFileSync(projectsPath, JSON.stringify([
-    {
-      "name": "IonRh主页", 
-      "description": "Github介绍页", 
-      "url": "https://github.com/IonRh", 
-      "icon": "https://img.icons8.com/fluency/48/github.png"
-    },
-    {
-      "name": "本站开源主页", 
-      "description": "本站的开源仓库", 
-      "url": "https://github.com/IonRh/HomePage", 
-      "icon": "https://img.icons8.com/fluency/48/github.png"
-    },
-    {
-      "name": "CF BestIP", 
-      "description": "Cloudflare优选IP", 
-      "url": "https://github.com/IonRh/Cloudflare-BestIP", 
-      "icon": "https://img.icons8.com/fluency/48/github.png"
-    },
-    {
-      "name": "TGBot_RSS", 
-      "description": "TGBot的RSS订阅", 
-      "url": "https://github.com/IonRh/TGBot_RSS", 
-      "icon": "https://img.icons8.com/fluency/48/github.png"
+      id: 'projects',
+      name: '项目集',
+      icon: 'fas fa-cube',
+      items: [
+        { name: "IonRh主页", description: "Github介绍页", url: "https://github.com/IonRh", icon: "https://img.icons8.com/fluency/48/github.png" },
+        { name: "本站开源主页", description: "本站的开源仓库", url: "https://github.com/IonRh/HomePage", icon: "https://img.icons8.com/fluency/48/github.png" }
+      ]
     }
   ]));
 }
@@ -92,14 +49,13 @@ app.use(session({
   secret: 'secret-key',
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // 生产环境应设为true
+  cookie: { secure: false }
 }));
 
 // 静态文件服务
 app.use('/static', express.static(path.join(__dirname, 'static')));
 app.use('/data', express.static(path.join(__dirname, 'data'), {
   setHeaders: (res) => {
-    // 禁用缓存
     res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.set('Pragma', 'no-cache');
     res.set('Expires', '0');
@@ -185,38 +141,21 @@ app.post('/admin/set-password', (req, res) => {
   res.send('密码设置成功');
 });
 
-// 路由：获取站点数据
-app.get('/admin/sites', (req, res) => {
+// 路由：获取所有类别
+app.get('/admin/categories', (req, res) => {
   if (!req.session.isAdmin) return res.status(403).send('无权限');
   
-  const sites = JSON.parse(fs.readFileSync(sitesPath, 'utf8'));
-  res.json(sites);
+  const categories = JSON.parse(fs.readFileSync(categoriesPath, 'utf8'));
+  res.json(categories);
 });
 
-// 路由：更新站点数据
-app.post('/admin/sites', (req, res) => {
+// 路由：更新类别数据
+app.post('/admin/categories', (req, res) => {
   if (!req.session.isAdmin) return res.status(403).send('无权限');
   
-  const sites = req.body;
-  fs.writeFileSync(sitesPath, JSON.stringify(sites, null, 2));
-  res.send('站点数据更新成功');
-});
-
-// 路由：获取项目数据
-app.get('/admin/projects', (req, res) => {
-  if (!req.session.isAdmin) return res.status(403).send('无权限');
-  
-  const projects = JSON.parse(fs.readFileSync(projectsPath, 'utf8'));
-  res.json(projects);
-});
-
-// 路由：更新项目数据
-app.post('/admin/projects', (req, res) => {
-  if (!req.session.isAdmin) return res.status(403).send('无权限');
-  
-  const projects = req.body;
-  fs.writeFileSync(projectsPath, JSON.stringify(projects, null, 2));
-  res.send('项目数据更新成功');
+  const categories = req.body;
+  fs.writeFileSync(categoriesPath, JSON.stringify(categories, null, 2));
+  res.send('类别数据更新成功');
 });
 
 // 启动服务器
