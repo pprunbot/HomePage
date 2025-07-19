@@ -13,8 +13,8 @@
     - 修改第一行的 GitHub username 为你的用户名
 
 2. **部署方式**
-    - npm install 
-    - node server.js
+    - 安装依赖 `npm install`
+    - 启动服务器 `node server.js`
 
 3. **后台地址**
     - 访问 http://localhost:3000/admin
