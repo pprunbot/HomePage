@@ -32,6 +32,24 @@ if (!fs.existsSync(sitesPath)) {
       "description": "一些API接口", 
       "url": "https://api.loadke.tech", 
       "icon": "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
+    },
+    {
+      "name": "优选IP面板", 
+      "description": "Cloudflare优选IP", 
+      "url": "https://bestip.badking.pp.ua/", 
+      "icon": "https://img.icons8.com/?id=13682&format=png"
+    },
+    {
+      "name": "加速访问", 
+      "description": "GH Jsdlier Docker", 
+      "url": "https://webproxy.badking.pp.ua/", 
+      "icon": "https://img.icons8.com/?id=115369&format=png"
+    },
+    {
+      "name": "Google 翻译", 
+      "description": "Google 翻译加速", 
+      "url": "https://translate.badking.pp.ua/", 
+      "icon": "https://img.icons8.com/?id=h57OOadmEz64&format=png"
     }
   ]));
 }
@@ -51,6 +69,18 @@ if (!fs.existsSync(projectsPath)) {
       "description": "本站的开源仓库", 
       "url": "https://github.com/IonRh/HomePage", 
       "icon": "https://img.icons8.com/fluency/48/github.png"
+    },
+    {
+      "name": "CF BestIP", 
+      "description": "Cloudflare优选IP", 
+      "url": "https://github.com/IonRh/Cloudflare-BestIP", 
+      "icon": "https://img.icons8.com/fluency/48/github.png"
+    },
+    {
+      "name": "TGBot_RSS", 
+      "description": "TGBot的RSS订阅", 
+      "url": "https://github.com/IonRh/TGBot_RSS", 
+      "icon": "https://img.icons8.com/fluency/48/github.png"
     }
   ]));
 }
@@ -67,7 +97,14 @@ app.use(session({
 
 // 静态文件服务
 app.use('/static', express.static(path.join(__dirname, 'static')));
-app.use('/data', express.static(path.join(__dirname, 'data')));
+app.use('/data', express.static(path.join(__dirname, 'data'), {
+  setHeaders: (res) => {
+    // 禁用缓存
+    res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+  }
+}));
 
 // 检查密码是否设置
 function isPasswordSet() {
