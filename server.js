@@ -77,9 +77,9 @@ if (!fs.existsSync(projectsPath)) {
       "icon": "https://img.icons8.com/fluency/48/github.png"
     },
     {
-      "name": "TGBot_RSS", 
-      "description": "TGBot的RSS订阅", 
-      "url": "https://github.com/IonRh/TGBot_RSS", 
+      "name": "Test", 
+      "description": "Test", 
+      "url": "https://github.com/", 
       "icon": "https://img.icons8.com/fluency/48/github.png"
     }
   ]));
