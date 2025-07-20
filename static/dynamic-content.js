@@ -187,10 +187,10 @@ function renderDefaultProjects() {
         <a href="https://github.com/pprunbot/IOS_Shared" target="_blank" class="project-link btn-effect">
             <div class="project-card">
                 <div class="project-icon">
-                    <img src="https://img.icons8.com/fluency/48/github.png" alt="Shadowrocket账号共享">
+                    <img src="https://img.icons8.com/fluency/48/github.png" alt="小火箭共享">
                 </div>
                 <div class="project-info">
-                    <h3>Shadowrocket账号共享</h3>
+                    <h3>小火箭共享</h3>
                     <p>Shadowrocket共享</p>
                 </div>
             </div>
