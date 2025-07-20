@@ -24,4 +24,4 @@
 - **修改时请保留原作者信息**
 
 ## 📸 页面预览
-![主页截图](https://github.com/user-attachments/assets/de8bed1f-934e-4fee-958e-298becd5269f)
+![主页截图](https://raw.githubusercontent.com/pprunbot/TU/refs/heads/main/20-7-2025_21563.jpeg)
