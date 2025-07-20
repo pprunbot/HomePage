@@ -195,14 +195,14 @@ function renderDefaultProjects() {
                 </div>
             </div>
         </a>
-        <a href="https://github.com/IonRh/TGBot_RSS" target="_blank" class="project-link btn-effect">
+        <a href="https://github.com/" target="_blank" class="project-link btn-effect">
             <div class="project-card">
                 <div class="project-icon">
-                    <img src="https://img.icons8.com/fluency/48/github.png" alt="TGBot_RSS">
+                    <img src="https://img.icons8.com/fluency/48/github.png" alt="Test">
                 </div>
                 <div class="project-info">
-                    <h3>TGBot_RSS</h3>
-                    <p>TGBot的RSS订阅</p>
+                    <h3>Test</h3>
+                    <p>Test</p>
                 </div>
             </div>
         </a>
