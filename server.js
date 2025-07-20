@@ -71,8 +71,8 @@ if (!fs.existsSync(projectsPath)) {
       "icon": "https://img.icons8.com/fluency/48/github.png"
     },
     {
-      "name": "Shadowrocket账号共享", 
-      "description": "Shadowrocket vue前端页", 
+      "name": "小火箭账号共享", 
+      "description": "Vue前端页", 
       "url": "https://github.com/pprunbot/IOS_Shared", 
       "icon": "https://img.icons8.com/fluency/48/github.png"
     },
