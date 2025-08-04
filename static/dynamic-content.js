@@ -195,14 +195,14 @@ function renderDefaultProjects() {
                 </div>
             </div>
         </a>
-        <a href="https://github.com/" target="_blank" class="project-link btn-effect">
+        <a href="https://github.com/pprunbot/uptime-jk" target="_blank" class="project-link btn-effect">
             <div class="project-card">
                 <div class="project-icon">
-                    <img src="https://img.icons8.com/fluency/48/github.png" alt="Test">
+                    <img src="https://img.icons8.com/fluency/48/github.png" alt="心跳监控">
                 </div>
                 <div class="project-info">
-                    <h3>Test</h3>
-                    <p>Test</p>
+                    <h3>网站心跳监控</h3>
+                    <p>网站心跳监控</p>
                 </div>
             </div>
         </a>
