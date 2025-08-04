@@ -77,9 +77,9 @@ if (!fs.existsSync(projectsPath)) {
       "icon": "https://img.icons8.com/fluency/48/github.png"
     },
     {
-      "name": "Test", 
-      "description": "Test", 
-      "url": "https://github.com/", 
+      "name": "网站心跳监控", 
+      "description": "心跳监控", 
+      "url": "https://github.com/pprunbot/uptime-jk", 
       "icon": "https://img.icons8.com/fluency/48/github.png"
     }
   ]));
