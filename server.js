@@ -34,16 +34,16 @@ if (!fs.existsSync(sitesPath)) {
       "icon": "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
     },
     {
-      "name": "Cloudflare-test", 
-      "description": "Cloudflare-test", 
-      "url": "http://localhost:3000/", 
-      "icon": "https://img.icons8.com/?id=13682&format=png"
+      "name": "小火箭", 
+      "description": "账号共享", 
+      "url": "https://xhj.1000200.xyz/", 
+      "icon": "https://img.icons8.com/?size=100&id=115369&format=png&color=000000"
     },
     {
-      "name": "test", 
-      "description": "GH Jsdlier Docker", 
-      "url": "http://localhost:3000/", 
-      "icon": "https://img.icons8.com/?id=115369&format=png"
+      "name": "监控", 
+      "description": "网站状态监控", 
+      "url": "https://jk.1000200.xyz/", 
+      "icon": "https://img.icons8.com/?size=100&id=zPzvtPRxYIfS&format=png&color=000000"
     },
     {
       "name": "Google", 
