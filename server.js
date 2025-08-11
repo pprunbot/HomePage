@@ -22,15 +22,15 @@ const sitesPath = path.join(__dirname, 'data', 'sites.json');
 if (!fs.existsSync(sitesPath)) {
   fs.writeFileSync(sitesPath, JSON.stringify([
     {
-      "name": "博客", 
-      "description": "记录技术日常", 
-      "url": "http://localhost:3000/", 
+      "name": "主页", 
+      "description": "主页展示", 
+      "url": "http://home.1000200.xyz/", 
       "icon": "https://img.icons8.com/?id=87160&format=png"
     },
     {
-      "name": "轻API", 
-      "description": "API-test", 
-      "url": "http://localhost:3000", 
+      "name": "API", 
+      "description": "小火箭api", 
+      "url": "http://api.1000200.xyz", 
       "icon": "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
     },
     {
