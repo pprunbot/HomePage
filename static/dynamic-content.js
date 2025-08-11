@@ -121,25 +121,25 @@ function renderDefaultSites() {
                 </div>
             </div>
         </a>
-        <a href="http://localhost:3000/" target="_blank" class="site-link btn-effect">
+        <a href="https://xhj.1000200.xyz/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?id=13682&format=png" alt="Cloudflare-test">
+                    <img src="https://img.icons8.com/?size=100&id=115369&format=png&color=000000" alt="账号共享">
                 </div>
                 <div class="site-info">
-                    <h3>Cloudflare-test</h3>
-                    <p>Cloudflare-test</p>
+                    <h3>小火箭</h3>
+                    <p>账号共享</p>
                 </div>
             </div>
         </a>
-        <a href="http://localhost:3000/" target="_blank" class="site-link btn-effect">
+        <a href="https://jk.1000200.xyz/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?id=115369&format=png" alt="Github-Jsdlier-Docker">
+                    <img src="https://img.icons8.com/?size=100&id=zPzvtPRxYIfS&format=png&color=000000" alt="监控">
                 </div>
                 <div class="site-info">
-                    <h3>test</h3>
-                    <p>test</p>
+                    <h3>监控</h3>
+                    <p>网站监控</p>
                 </div>
             </div>
         </a>
