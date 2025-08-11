@@ -99,25 +99,25 @@ function renderDefaultSites() {
     if (!container) return;
     
     container.innerHTML = `
-        <a href="http://localhost:3000/" target="_blank" class="site-link btn-effect">
+        <a href="https://home.1000200.xyz/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?id=87160&format=png" alt="博客">
+                    <img src="https://img.icons8.com/?id=87160&format=png" alt="主页">
                 </div>
                 <div class="site-info">
-                    <h3>博客</h3>
-                    <p>记录技术日常</p>
+                    <h3>主页</h3>
+                    <p>主页展示</p>
                 </div>
             </div>
         </a>
-        <a href="http://localhost:3000/" target="_blank" class="site-link btn-effect">
+        <a href="https://api.1000200.xyz/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?id=Oz14KBnT7lnn&format=png" alt="API站">
+                    <img src="https://img.icons8.com/?id=Oz14KBnT7lnn&format=png" alt="API">
                 </div>
                 <div class="site-info">
-                    <h3>轻API</h3>
-                    <p>API-test</p>
+                    <h3>API</h3>
+                    <p>小火箭API</p>
                 </div>
             </div>
         </a>
