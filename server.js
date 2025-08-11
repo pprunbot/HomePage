@@ -24,13 +24,13 @@ if (!fs.existsSync(sitesPath)) {
     {
       "name": "主页", 
       "description": "主页展示", 
-      "url": "http://home.1000200.xyz/", 
+      "url": "https://home.1000200.xyz/", 
       "icon": "https://img.icons8.com/?id=87160&format=png"
     },
     {
       "name": "API", 
       "description": "小火箭api", 
-      "url": "http://api.1000200.xyz", 
+      "url": "https://api.1000200.xyz", 
       "icon": "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
     },
     {
