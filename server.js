@@ -25,31 +25,31 @@ if (!fs.existsSync(sitesPath)) {
       "name": "主页", 
       "description": "主页展示", 
       "url": "https://home.1000200.xyz/", 
-      "icon": "https://img.icons8.com/?id=87160&format=png"
+      "icon": "https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/?id=87160&format=png"
     },
     {
       "name": "API", 
       "description": "小火箭api", 
       "url": "https://api.1000200.xyz", 
-      "icon": "https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
+      "icon": "https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/?id=Oz14KBnT7lnn&format=png"
     },
     {
       "name": "小火箭", 
       "description": "账号共享", 
       "url": "https://xhj.1000200.xyz/", 
-      "icon": "https://img.icons8.com/?size=100&id=115369&format=png&color=000000"
+      "icon": "https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/?size=100&id=115369&format=png&color=000000"
     },
     {
       "name": "监控", 
       "description": "网站状态监控", 
       "url": "https://jk.1000200.xyz/", 
-      "icon": "https://img.icons8.com/?size=100&id=zPzvtPRxYIfS&format=png&color=000000"
+      "icon": "https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/?size=100&id=zPzvtPRxYIfS&format=png&color=000000"
     },
     {
       "name": "Google", 
       "description": "Google 翻译", 
       "url": "http://localhost:3000/", 
-      "icon": "https://img.icons8.com/?id=h57OOadmEz64&format=png"
+      "icon": "https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/?id=h57OOadmEz64&format=png"
     }
   ]));
 }
@@ -62,25 +62,25 @@ if (!fs.existsSync(projectsPath)) {
       "name": "pprunbot主页", 
       "description": "Github介绍页", 
       "url": "https://github.com/pprunbot/", 
-      "icon": "https://img.icons8.com/fluency/48/github.png"
+      "icon": "https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/fluency/48/github.png"
     },
     {
       "name": "本站开源主页", 
       "description": "本站的开源仓库", 
       "url": "https://github.com/pprunbot/HomePage/", 
-      "icon": "https://img.icons8.com/fluency/48/github.png"
+      "icon": "https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/fluency/48/github.png"
     },
     {
       "name": "小火箭账号共享", 
       "description": "Vue前端页", 
       "url": "https://github.com/pprunbot/IOS_Shared", 
-      "icon": "https://img.icons8.com/fluency/48/github.png"
+      "icon": "https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/fluency/48/github.png"
     },
     {
       "name": "网站心跳监控", 
       "description": "心跳监控", 
       "url": "https://github.com/pprunbot/uptime-jk", 
-      "icon": "https://img.icons8.com/fluency/48/github.png"
+      "icon": "https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/fluency/48/github.png"
     }
   ]));
 }
