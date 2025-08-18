@@ -102,7 +102,7 @@ function renderDefaultSites() {
         <a href="https://home.1000200.xyz/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?id=87160&format=png" alt="主页">
+                    <img src="https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/?id=87160&format=png" alt="主页">
                 </div>
                 <div class="site-info">
                     <h3>主页</h3>
@@ -113,7 +113,7 @@ function renderDefaultSites() {
         <a href="https://api.1000200.xyz/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?id=Oz14KBnT7lnn&format=png" alt="API">
+                    <img src="https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/?id=Oz14KBnT7lnn&format=png" alt="API">
                 </div>
                 <div class="site-info">
                     <h3>API</h3>
@@ -124,7 +124,7 @@ function renderDefaultSites() {
         <a href="https://xhj.1000200.xyz/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?size=100&id=115369&format=png&color=000000" alt="账号共享">
+                    <img src="https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/?size=100&id=115369&format=png&color=000000" alt="账号共享">
                 </div>
                 <div class="site-info">
                     <h3>小火箭</h3>
@@ -135,7 +135,7 @@ function renderDefaultSites() {
         <a href="https://jk.1000200.xyz/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?size=100&id=zPzvtPRxYIfS&format=png&color=000000" alt="监控">
+                    <img src="https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/?size=100&id=zPzvtPRxYIfS&format=png&color=000000" alt="监控">
                 </div>
                 <div class="site-info">
                     <h3>监控</h3>
@@ -146,7 +146,7 @@ function renderDefaultSites() {
         <a href="http://localhost:3000/" target="_blank" class="site-link btn-effect">
             <div class="site-card">
                 <div class="site-icon">
-                    <img src="https://img.icons8.com/?id=h57OOadmEz64&format=png" alt="Google 翻译">
+                    <img src="https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/?id=h57OOadmEz64&format=png" alt="Google 翻译">
                 </div>
                 <div class="site-info">
                     <h3>Google 翻译</h3>
@@ -165,7 +165,7 @@ function renderDefaultProjects() {
         <a href="https://github.com/pprunbot/" target="_blank" class="project-link btn-effect">
             <div class="project-card">
                 <div class="project-icon">
-                    <img src="https://img.icons8.com/fluency/48/github.png" alt=""pprunbot主页">
+                    <img src="https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/fluency/48/github.png" alt=""pprunbot主页">
                 </div>
                 <div class="project-info">
                     <h3>"pprunbot主页</h3>
@@ -176,7 +176,7 @@ function renderDefaultProjects() {
         <a href="https://github.com/pprunbot/HomePage/" target="_blank" class="project-link btn-effect">
             <div class="project-card">
                 <div class="project-icon">
-                    <img src="https://img.icons8.com/fluency/48/github.png" alt="pprunbot主题">
+                    <img src="https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/fluency/48/github.png" alt="pprunbot主题">
                 </div>
                 <div class="project-info">
                     <h3>本站开源主页</h3>
@@ -187,7 +187,7 @@ function renderDefaultProjects() {
         <a href="https://github.com/pprunbot/IOS_Shared" target="_blank" class="project-link btn-effect">
             <div class="project-card">
                 <div class="project-icon">
-                    <img src="https://img.icons8.com/fluency/48/github.png" alt="小火箭共享">
+                    <img src="https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/fluency/48/github.png" alt="小火箭共享">
                 </div>
                 <div class="project-info">
                     <h3>小火箭共享</h3>
@@ -198,7 +198,7 @@ function renderDefaultProjects() {
         <a href="https://github.com/pprunbot/uptime-jk" target="_blank" class="project-link btn-effect">
             <div class="project-card">
                 <div class="project-icon">
-                    <img src="https://img.icons8.com/fluency/48/github.png" alt="心跳监控">
+                    <img src="https://py.bpbpanel.ip-ddns.com/https://img.icons8.com/fluency/48/github.png" alt="心跳监控">
                 </div>
                 <div class="project-info">
                     <h3>网站心跳监控</h3>
